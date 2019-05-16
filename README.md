@@ -2,6 +2,19 @@
 
 Awesome Vehicle Rental Service: CS360(Intro to Database) Project
 
+## TODO:
+*Add dummy database content
+*Home page
+*Login page
+*Profile page
+  *History page
+*Browse page
+*Booking page
+*Payment page
+
+
+
+
 ## Project setup
 ```
 npm install
