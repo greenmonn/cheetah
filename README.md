@@ -13,7 +13,7 @@ Awesome Vehicle Rental Service: CS360(Intro to Database) Project
 * Browse page
 * Booking page
 * Payment page
-
+* Navigator
 
 
 
