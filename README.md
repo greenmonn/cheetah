@@ -3,8 +3,9 @@
 Awesome Vehicle Rental Service: CS360(Intro to Database) Project
 
 ## TODO:
-* Add dummy database content
-* Home page
+* Finish Datadesign (Robert)
+* Add dummy database content (Robert)
+* Home page (JuYeon)
 * Login page
 * Profile page
   * History page
