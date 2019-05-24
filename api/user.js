@@ -1,11 +1,15 @@
 const express = require('express');
-
 const mysql = require('mysql');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const config = require('./config');
+
+const saltRounds = 10;
 
 const connection = mysql.createConnection({
   host: '18.220.88.197',
   user: 'cheetah',
-  password: 'cs360project', // should be hided
+  password: config.mysql_secret,
   port: 3306,
   database: 'cheetah',
 });
@@ -16,79 +20,121 @@ const router = express.Router();
 
 const firstToUpperCase = property => property.charAt(0).toUpperCase() + property.slice(1);
 
+const createToken = (userInfo, secret) => new Promise((resolve, reject) => {
+  jwt.sign(
+    userInfo,
+    secret,
+    {
+      expiresIn: '7d',
+      issuer: 'cheetah',
+      subject: 'userInfo',
+    },
+    (err, token) => {
+      if (err) reject(err);
+      resolve(token);
+    },
+  );
+});
+
+const verifyToken = (token, secret) => new Promise((resolve, reject) => {
+  jwt.verify(token, secret, (err, decoded) => {
+    if (err) reject(err);
+    resolve(decoded);
+  });
+});
+
+const hash = password => new Promise((resolve, reject) => {
+  bcrypt.genSalt(saltRounds, (err, salt) => {
+    if (err) reject(err);
+
+    bcrypt.hash(password, salt, (err, hash) => {
+      if (err) reject(err);
+      resolve(hash);
+    });
+  });
+});
+
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  connection.query(
-    'SELECT * FROM USER where Username = ? AND Password = ?',
-    [username, password],
-    (err, rows) => {
-      if (err) {
-        throw err;
-      }
+  connection.query('SELECT * FROM USER where Username = ?', [username], async (err, rows) => {
+    if (err) {
+      throw err;
+    }
 
-      if (rows.length > 0) {
-        const user = {
-          username: rows[0].Username,
-          name: `${rows[0].Lname} ${rows[0].Fname}`,
-          fname: rows[0].Fname,
-          lname: rows[0].Lname,
-          phone_no: rows[0].Phone_no.toString(),
-          license_no: rows[0].License_no.toString(),
-        };
+    if (rows.length > 0) {
+      const isCorrectPassword = await bcrypt.compare(password, rows[0].Password);
 
-        res.send({ authenticated: true, user });
-      } else {
+      if (!isCorrectPassword) {
         res.send({ authenticated: false });
+        return;
       }
-    },
-  );
+
+      const user = {
+        username: rows[0].Username,
+        name: `${rows[0].Lname} ${rows[0].Fname}`,
+        fname: rows[0].Fname,
+        lname: rows[0].Lname,
+        phone_no: rows[0].Phone_no.toString(),
+        license_no: rows[0].License_no.toString(),
+      };
+
+      createToken(user, req.app.get('jwt-secret'))
+        .then((token) => {
+          res.send({ authenticated: true, user, token });
+        })
+        .catch(() => {
+          res.send({ authenticated: false });
+        });
+    } else {
+      res.send({ authenticated: false });
+    }
+  });
 });
 
 router.post('/updateInfo', (req, res) => {
-  const updatedUser = {};
-  Object.keys(req.body).forEach((key) => {
-    if (key !== 'name') {
-      const newKey = firstToUpperCase(key);
-      updatedUser[newKey] = req.body[key];
-    }
-  });
+  verifyToken(req.body.token, req.app.get('jwt-secret'))
+    .then((decoded) => {
+      console.log(decoded);
+      const user = req.body;
+      const updatedUser = {};
 
-  connection.query(
-    'UPDATE USER SET ? WHERE Username = ?',
-    [updatedUser, req.body.username],
-    (err, result) => {
-      if (err) {
-        res.send({
-          success: false,
-        });
-        console.log(err);
-        return;
-      }
-      console.log(result);
-      res.send({
-        success: true,
-        updatedUser,
+      delete user.name;
+      delete user.token;
+
+      Object.keys(user).forEach((key) => {
+        const newKey = firstToUpperCase(key);
+        updatedUser[newKey] = user[key];
       });
-    },
-  );
+
+      connection.query(
+        'UPDATE USER SET ? WHERE Username = ?',
+        [updatedUser, user.username],
+        (err, result) => {
+          if (err) {
+            res.send({
+              success: false,
+            });
+            console.log(err);
+            return;
+          }
+          console.log(result);
+          res.send({
+            success: true,
+            user,
+          });
+        },
+      );
+    })
+    .catch(() => {
+      res.send({
+        sucess: false,
+      });
+    });
 });
 
-router.post('/join', (req, res) => {
-  // const user = [];
-  // Object.keys(req.body).forEach((key) => {
-  //   if (
-  //     key === 'phone_no'
-  //     || key === 'license_no'
-  //     || key === 'card_no'
-  //     || key === 'expr_date'
-  //     || key === 'cvv'
-  //   ) {
-  //     user.push(parseInt(req.body[key], 10));
-  //   } else {
-  //     user.push(req.body[key]);
-  //   }
-  // });
+router.post('/join', async (req, res) => {
+  req.body.password = await hash(req.body.password);
 
   connection.query(
     'INSERT INTO USER (Username, Password, Fname, Lname, Phone_no, License_no, Card_no, Expr_date, Cvv) VALUES ?',

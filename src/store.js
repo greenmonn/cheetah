@@ -9,9 +9,13 @@ export default new Vuex.Store({
     authenticated: false,
     username: '',
     userInfo: '',
+    token: '',
   },
   mutations: {
-    logIn: (state, user) => {
+    logIn: (state, payload) => {
+      const { user } = payload;
+      state.token = payload.token;
+
       state.authenticated = true;
       state.username = user.username;
       state.userInfo = user;
@@ -26,8 +30,8 @@ export default new Vuex.Store({
       }
     },
     updateUser: (state, updatedUser) => {
-      console.log(updatedUser);
-      Object.assign(state.userInfo, updatedUser);
+      state.userInfo = Object.assign(state.userInfo, updatedUser);
+      console.log(state.userInfo);
     },
   },
   actions: {

@@ -41,13 +41,13 @@ export default {
       if (this.$refs.loginform.validate()) {
         this.$Axios
           .post('http://127.0.0.1:3001/user/login', this.input)
-          .then(res => {
+          .then((res) => {
             console.log(res);
             if (res.data.authenticated) {
-              const { user } = res.data;
+              const { user, token } = res.data;
 
               this.invalidInfo = false;
-              this.$store.commit('logIn', user);
+              this.$store.commit('logIn', { user, token });
               this.$router.push('/');
             } else {
               this.invalidInfo = true;

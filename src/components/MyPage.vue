@@ -58,22 +58,24 @@ export default {
       dialogue: false,
       phoneMask: '###-####-####',
       licenseMask: '##-##-######-##',
-      input: this.$store.state.userInfo,
+      input: { ...this.$store.state.userInfo },
     };
   },
   methods: {
     updateProfile() {
+      const { token } = this.$store.state;
+
       this.$Axios
-        .post('http://127.0.0.1:3001/user/updateInfo', this.input)
+        .post('http://127.0.0.1:3001/user/updateInfo', { token, ...this.input })
         .then((res) => {
           console.log(res);
 
           if (res.data.success) {
-            const { updatedUser } = res.data;
+            const { user } = res.data;
 
-            this.$store.commit('updateUser', updatedUser);
+            this.$store.commit('updateUser', user);
           } else {
-            this.$router.push('/MyPage');
+            this.input = { ...this.$store.state.userInfo };
           }
         });
     },

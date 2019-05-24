@@ -4,12 +4,15 @@ const app = express();
 
 const cors = require('cors');
 
+const config = require('./config');
 const userRoute = require('./user');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
+
+app.set('jwt-secret', config.jwt_secret);
 
 app.use('/user', userRoute);
 
