@@ -13,7 +13,7 @@ Awesome Vehicle Rental Service: CS360(Intro to Database) Project
 - [ ] Browse page
 - [ ] Booking page
 - [ ] Payment page
-- [ ] Navigator 
+- [x] Navigator 
 
 
 
@@ -25,9 +25,9 @@ npm install
 ### Run API server
 ```
 npm run api
-
+```
 or
-
+```
 node api/app.js
 ```
 

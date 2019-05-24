@@ -14,6 +14,8 @@ connection.connect();
 
 const router = express.Router();
 
+const firstToUpperCase = property => property.charAt(0).toUpperCase() + property.slice(1);
+
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -29,12 +31,45 @@ router.post('/login', (req, res) => {
         const user = {
           username: rows[0].Username,
           name: `${rows[0].Lname} ${rows[0].Fname}`,
+          fname: rows[0].Fname,
+          lname: rows[0].Lname,
+          phone_no: rows[0].Phone_no.toString(),
+          license_no: rows[0].License_no.toString(),
         };
 
         res.send({ authenticated: true, user });
       } else {
         res.send({ authenticated: false });
       }
+    },
+  );
+});
+
+router.post('/updateInfo', (req, res) => {
+  const updatedUser = {};
+  Object.keys(req.body).forEach((key) => {
+    if (key !== 'name') {
+      const newKey = firstToUpperCase(key);
+      updatedUser[newKey] = req.body[key];
+    }
+  });
+
+  connection.query(
+    'UPDATE USER SET ? WHERE Username = ?',
+    [updatedUser, req.body.username],
+    (err, result) => {
+      if (err) {
+        res.send({
+          success: false,
+        });
+        console.log(err);
+        return;
+      }
+      console.log(result);
+      res.send({
+        success: true,
+        updatedUser,
+      });
     },
   );
 });

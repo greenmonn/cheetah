@@ -119,7 +119,7 @@ export default {
   border: 1px solid #cccccc;
   background-color: #ffffff;
   margin: auto;
-  margin-top: 200px;
+  margin-top: 130px;
   padding: 20px;
 }
 </style>

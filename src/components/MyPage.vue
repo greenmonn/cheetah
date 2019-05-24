@@ -1,17 +1,99 @@
 <template>
   <div class="mypage">
-    <h1>{{ title }}</h1>
+    <v-container>
+      <h1>{{ title }}</h1>
+
+      <v-layout row wrap class="profile">
+        <v-flex xs6 sm9 md9>
+          <v-form ref="joinform">
+            <v-container class="profile-form">
+              <h2>
+                <v-icon>person</v-icon>
+                {{ input.username }}
+              </h2>
+              <br>
+              <v-layout row wrap>
+                <v-flex class="xs6">
+                  <v-text-field v-model="input.fname" label="First Name" required></v-text-field>
+                </v-flex>
+                <v-flex>
+                  <v-text-field v-model="input.lname" label="Last Name" required></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-text-field
+                v-model="input.phone_no"
+                :mask="phoneMask"
+                label="Phone Number"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="input.license_no"
+                :mask="licenseMask"
+                label="License Number"
+                required
+              ></v-text-field>
+            </v-container>
+            <v-btn color="brown darken-4 white--text" @click="updateProfile()">Update Profile</v-btn>
+            <v-btn color="primary">Add Payment Method</v-btn>
+          </v-form>
+        </v-flex>
+
+        <v-flex xs6 sm3 md3 align-center justify-center layout text-xs-center>
+          <v-avatar size="200" color="grey lighten-4">
+            <img src="https://greenmon.dev/assets/images/Greenmon-1.png" alt="avatar">
+          </v-avatar>
+        </v-flex>
+      </v-layout>
+      <br>
+      <h1>Rental History</h1>
+    </v-container>
   </div>
 </template>
 <script>
 export default {
-  name: "mypage",
+  name: 'mypage',
   data() {
     return {
-      title: "Mypage"
+      title: 'My Page',
+      dialogue: false,
+      phoneMask: '###-####-####',
+      licenseMask: '##-##-######-##',
+      input: this.$store.state.userInfo,
     };
-  }
+  },
+  methods: {
+    updateProfile() {
+      this.$Axios
+        .post('http://127.0.0.1:3001/user/updateInfo', this.input)
+        .then((res) => {
+          console.log(res);
+
+          if (res.data.success) {
+            const { updatedUser } = res.data;
+
+            this.$store.commit('updateUser', updatedUser);
+          } else {
+            this.$router.push('/MyPage');
+          }
+        });
+    },
+  },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
+.profile {
+  border: 1px solid #cccccc;
+  background-color: #ffffff;
+  padding: 50px;
+  margin: 30px 0;
+  border-radius: 30px;
+
+  .profile-form {
+    padding-right: 100px;
+  }
+
+  button {
+    margin-left: 15px;
+  }
+}
 </style>

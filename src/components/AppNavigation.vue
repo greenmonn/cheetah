@@ -20,9 +20,9 @@
         Welcome
         <strong>{{ username }}</strong>!
       </router-link>
-      <v-btn color="brown lighten-3">
-        <router-link class="nav-link" to="/LogOut">LogOut</router-link>
-      </v-btn>
+      <router-link class="nav-link" to="/LogOut">
+        <v-btn color="brown lighten-3">LogOut</v-btn>
+      </router-link>
     </div>
   </v-toolbar>
 </template>
