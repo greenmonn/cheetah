@@ -72,7 +72,7 @@ export default {
   name: 'join',
   data() {
     return {
-      title: 'Join',
+      title: 'Join Cheetah',
       dialogue: false,
       showPassword: false,
       phoneMask: '###-####-####',
