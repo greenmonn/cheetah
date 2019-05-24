@@ -14,9 +14,9 @@ app.use(cors());
 
 app.set('jwt-secret', config.jwt_secret);
 
-app.use('/user', userRoute);
+app.use('/api/user', userRoute);
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('api');
 });
 
