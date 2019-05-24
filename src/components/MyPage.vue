@@ -66,7 +66,7 @@ export default {
       const { token } = this.$store.state;
 
       this.$Axios
-        .post('http://127.0.0.1:3001/user/updateInfo', { token, ...this.input })
+        .post(`${this.$host}/user/updateInfo`, { token, ...this.input })
         .then((res) => {
           console.log(res);
 

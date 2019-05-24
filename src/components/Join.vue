@@ -95,7 +95,7 @@ export default {
     join() {
       if (this.$refs.joinform.validate()) {
         this.$Axios
-          .post('http://127.0.0.1:3001/user/join', this.input)
+          .post(`${this.$host}/user/join`, this.input)
           .then(res => {
             if (res.data === true) {
               this.dialogue = true;

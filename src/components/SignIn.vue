@@ -40,7 +40,7 @@ export default {
     login() {
       if (this.$refs.loginform.validate()) {
         this.$Axios
-          .post('http://127.0.0.1:3001/user/login', this.input)
+          .post(`${this.$host}/user/login`, this.input)
           .then((res) => {
             console.log(res);
             if (res.data.authenticated) {
