@@ -6,7 +6,7 @@ import router from './router';
 import store from './store';
 
 Vue.prototype.$Axios = axios;
-Vue.prototype.$host = process.env.NODE_ENV === 'production' ? 'http://cheetah.greenmon.dev/api' : 'http://127.0.0.1:3001/api';
+Vue.prototype.$host = process.env.NODE_ENV === 'production' ? 'https://cheetah.greenmon.dev/api' : 'http://127.0.0.1:3001/api';
 
 Vue.config.productionTip = false;
 
