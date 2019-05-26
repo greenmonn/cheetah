@@ -108,6 +108,8 @@ router.post('/updateInfo', (req, res) => {
         updatedUser[newKey] = user[key];
       });
 
+      console.log(updatedUser);
+
       connection.query(
         'UPDATE USER SET ? WHERE Username = ?',
         [updatedUser, user.username],
