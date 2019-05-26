@@ -11,7 +11,7 @@
               {{vehicle.Position_long}},
               {{vehicle.Position_lat}}
               <br>
-              <img v-if="vehicle.Is_reserved" src="../assets/booked.png" width="100px">
+              <img v-if="vehicle.Occupied_by" src="../assets/booked.png" width="100px">
               <img v-else src="../assets/available.png" width="100px">
               <br>
               Charge per day: {{vehicle.Charge_per_day}}won/day
