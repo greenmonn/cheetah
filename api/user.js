@@ -71,6 +71,7 @@ router.post('/login', (req, res) => {
       }
 
       const user = {
+        uid: rows[0].Uid,
         username: rows[0].Username,
         name: `${rows[0].Lname} ${rows[0].Fname}`,
         fname: rows[0].Fname,

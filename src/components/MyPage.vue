@@ -44,6 +44,22 @@
           </v-avatar>
         </v-flex>
       </v-layout>
+
+      <v-dialog v-model="dialogue" width="500">
+        <v-card>
+          <v-card-title class="headline grey lighten-2" primary-title>Profile Update</v-card-title>
+
+          <v-card-text>Profile update success.</v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="dialogue = false">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       <br>
       <h1>Rental History</h1>
     </v-container>
@@ -74,6 +90,7 @@ export default {
             const { user } = res.data;
 
             this.$store.commit('updateUser', user);
+            this.dialogue = true;
           } else {
             this.input = { ...this.$store.state.userInfo };
           }

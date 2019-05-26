@@ -18,6 +18,8 @@ export default new Vuex.Store({
 
       state.authenticated = true;
       state.username = user.username;
+      state.uid = user.uid;
+      delete user.uid;
       state.userInfo = user;
     },
     logOut: (state) => {
