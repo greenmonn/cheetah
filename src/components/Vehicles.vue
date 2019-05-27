@@ -11,18 +11,35 @@
               {{vehicle.Position_long}},
               {{vehicle.Position_lat}}
               <br>
-              <img v-if="vehicle.Occupied_by" src="../assets/booked.png" width="100px">
+              <img
+                v-if="vehicle.Occupied_by"
+                src="../assets/booked.png"
+                width="100px"
+                position="right"
+              >
               <img v-else src="../assets/available.png" width="100px">
-              <br>
-              Charge per day: {{vehicle.Charge_per_day}}won/day
+
               <br>
               Model: {{vehicle.Model}}
               <br>
               Class: {{vehicle.Class}}
-              <v-btn color="brown darken-4 white--text" @click="dialogue = true">Book This!</v-btn>
-              <!--click = Book()
-              + google maps 
-              -->
+              <br>
+              Charge: {{vehicle.Charge_per_day}}won/day
+              <v-btn
+                v-if="!vehicle.Occupied_by"
+                color="brown darken-4 white--text"
+                @click="dialogue = true"
+              >Book This!</v-btn>
+              <!--click = Book()+ google maps            -->
+              <iframe
+                v-if="!vehicle.Occupied_by"
+                width="400"
+                height="200"
+                frameborder="0"
+                style="border:0"
+                src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBf4DvQpLUIxEhRIQjB9RSwBCIQueM9oi4&center=36.367611, 127.361206&zoom=18&maptype=satellite"
+                allowfullscreen
+              ></iframe>
             </v-sheet>
           </v-flex>
         </v-layout>
@@ -31,15 +48,7 @@
         <v-dialog v-model="dialogue" width="500">
           <v-card>
             <v-card-title class="headline grey lighten-2" primary-title>Booked!</v-card-title>
-
             <v-card-text>Payment success.</v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" flat @click="dialogue = false">Close</v-btn>
-            </v-card-actions>
           </v-card>
         </v-dialog>
       </v-container>
@@ -51,7 +60,7 @@
 <script>
 export default {
   name: "vehicles",
-  data: function() {
+  data() {
     return {
       dialogue: false,
       vehicles: []
@@ -63,7 +72,7 @@ export default {
         .get(`${this.$host}/vehicle/search`)
         .then(response => {
           this.vehicles = response.data.vehicle_data;
-          console.log(this.vehicles);
+          //console.log(typeof this.vehicles[0].Position_long.toString());
         })
         .catch(function(error) {
           console.log(error);
