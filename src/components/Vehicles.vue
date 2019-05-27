@@ -7,10 +7,7 @@
       <v-container fill-height>
         <v-layout justify-center align-content-center column pa-5>
           <v-flex lg12>
-            <v-sheet color="grey" height="300px" elevation="20">
-              {{vehicle.Position_long}},
-              {{vehicle.Position_lat}}
-              <br>
+            <v-sheet elevation="20">
               <img
                 v-if="vehicle.Occupied_by"
                 src="../assets/booked.png"
@@ -20,26 +17,30 @@
               <img v-else src="../assets/available.png" width="100px">
 
               <br>
-              Model: {{vehicle.Model}}
-              <br>
-              Class: {{vehicle.Class}}
-              <br>
-              Charge: {{vehicle.Charge_per_day}}won/day
-              <v-btn
-                v-if="!vehicle.Occupied_by"
-                color="brown darken-4 white--text"
-                @click="dialogue = true"
-              >Book This!</v-btn>
-              <!--click = Book()+ google maps            -->
-              <iframe
-                v-if="!vehicle.Occupied_by"
-                width="400"
-                height="200"
-                frameborder="0"
-                style="border:0"
-                src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBf4DvQpLUIxEhRIQjB9RSwBCIQueM9oi4&center=36.367611, 127.361206&zoom=18&maptype=satellite"
-                allowfullscreen
-              ></iframe>
+              <div style="text-align:center; font-size: 3.0em;">
+                <strong>{{vehicle.Model}}</strong>
+                <br>
+                Class: {{vehicle.Class}}
+                <br>
+                Charge: {{vehicle.Charge_per_day}}won/day
+              </div>
+              <div style="text-align:center">
+                <iframe
+                  v-if="!vehicle.Occupied_by"
+                  width="400"
+                  height="200"
+                  frameborder="0"
+                  style="border:3px groove black"
+                  src="https://www.google.com/maps/embed/v1/view?key=ASKSEUNGJUN&center=36.367611, 127.361206&zoom=18&maptype=satellite"
+                  allowfullscreen
+                ></iframe>
+                <br>
+                <v-btn
+                  v-if="!vehicle.Occupied_by"
+                  color="brown darken-4 white--text"
+                  @click="dialogue = true"
+                >Book This!</v-btn>
+              </div>
             </v-sheet>
           </v-flex>
         </v-layout>
