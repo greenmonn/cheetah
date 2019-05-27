@@ -144,6 +144,7 @@ router.post('/join', async (req, res) => {
     [[Object.values(req.body)]],
     (err, result) => {
       if (err) {
+        console.log(err);
         res.send(false);
         return;
       }

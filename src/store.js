@@ -10,6 +10,7 @@ export default new Vuex.Store({
     username: '',
     userInfo: '',
     token: '',
+    uid: '',
   },
   mutations: {
     logIn: (state, payload) => {

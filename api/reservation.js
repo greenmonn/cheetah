@@ -37,7 +37,9 @@ router.get('/:id', (req, res) => {
         Object.keys(row).forEach((key) => {
           let value = row[key];
           if (key === 'Reserve_date' || key === 'Return_date') {
-            value = row[key].toISOString().slice(0, 10);
+            if (row[key]) {
+              value = row[key].toISOString().slice(0, 10);
+            }
           } else if (key === 'Charge') {
             value = util.numberWithCommas(row[key]);
           }

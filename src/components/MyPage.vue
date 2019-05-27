@@ -101,6 +101,7 @@
           <td>{{ props.item.return_date }}</td>
           <td>{{ props.item.charge }}</td>
           <td>{{ props.item.model }}</td>
+          <td><v-btn v-if="!props.item.return_date" @click="returnVehicle(props.item.reserved_vehicle, props.item.rid)" color="primary --text-white">Return</v-btn></td>
         </template>
       </v-data-table>
     </v-container>
@@ -138,6 +139,7 @@ export default {
         { text: 'Returned Date', value: 'return_date' },
         { text: 'Charge', value: 'charge' },
         { text: 'Reserved Vehicle', value: 'model' },
+        { text: 'Return' },
       ],
       histories: [],
     };
@@ -173,6 +175,18 @@ export default {
             console.log(res);
 
             this.payment_dialogue = false;
+          }
+        });
+    },
+    returnVehicle(vid, rid) {
+      this.$Axios
+        .post(`${this.$host}/vehicle/return`, { vid, rid })
+        .then((res) => {
+          console.log(res);
+
+          if (res.data) {
+            console.log(res);
+            this.getReservationHistory();
           }
         });
     },
